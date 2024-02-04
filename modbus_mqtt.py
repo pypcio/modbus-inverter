@@ -1,16 +1,10 @@
 #!/usr/bin/env python3
-"""Pymodbus asynchronous client example.
-
-An example of a single threaded synchronous client.
-
-usage: simple_client_async.py
-
-All options must be adapted in the code
-The corresponding server must be started before e.g. as:
-    python3 server_sync.py
-"""
 import asyncio
 import struct
+# from pymodbus.client import AsyncModbusTcpClient as ModbusClient
+from datetime import datetime
+import json
+import paho.mqtt.client as mqtt
 import pymodbus.client as ModbusClient
 from pymodbus import (
     ExceptionResponse,
@@ -19,26 +13,10 @@ from pymodbus import (
     pymodbus_apply_logging_config,
 )
 
-import json
-import firebase_admin
-from firebase_admin import credentials
-from firebase_admin import db
-from firebase_admin import firestore
-from datetime import datetime
-
-cred = credentials.Certificate(r"D:\_robota_ojciec\iot-modbus-v1-firebase-adminsdk-be4xd-93cd841318.json")
-firebase_admin.initialize_app(cred)
-print("Connected to Firebase Firestore.")
-
-
-def send_data_to_firebase(data):
-    db = firestore.client()
-    doc_ref = db.collection('energy-meter-rut3').document()
-    doc_ref.set(data)
-    print("Data successfully added to Firestore.")
-    # ref = db.reference('/your/firebase/data/path')
-    # ref.set(json.loads(json.dumps(data)))
-
+# MQTT Broker Settings
+MQTT_BROKER = 'localhost'  # Example: 'localhost' or 'broker.hivemq.com'
+MQTT_PORT = 1883  # Default port for MQTT
+MQTT_TOPIC = 'energy_meter_rut3/data'
 
 # Constants for Register Addresses
 VOLTAGE_L1 = 0x00
@@ -98,74 +76,49 @@ REGISTER_MAP = {
 # list = [0x00, 0x02, 0x04, 0x06, 0x08, 0x0A, 0x46]
 list = [0x00, 0x06, 0x46]
 
-
-# def process_registers(start_address, registers):
-#     """Process Modbus registers and return list of values with descriptions."""
-#     values = []
-#     for i in range(0, len(registers), 2):
-#         current_address = start_address + i // 2
-#
-#         if current_address not in REGISTER_MAP:
-#             continue  # Skip this register if not found
-#
-#         # Fetch the description, unit, and variable type
-#         reg_info = REGISTER_MAP.get(current_address, ("Unknown", "", None))
-#         description, unit, var_type = reg_info if len(reg_info) == 3 else (*reg_info, None)
-#
-#         raw_value = struct.pack('>HH', registers[i], registers[i + 1])
-#
-#         scaled_value=struct.unpack('>f', raw_value)[0]
-#         values.append(f"{description}: {scaled_value:.2f} {unit}")
-#
-#     return values
 def process_registers_into_json_data(start_address, registers):
     """Process Modbus registers and return dictionary of values with descriptions."""
     data = {}
     for i in range(0, len(registers), 2):
         current_address = start_address + i
-
         if current_address not in REGISTER_MAP:
             continue  # Skip this register if not found
-
         reg_info = REGISTER_MAP[current_address]
         description = reg_info["description"]
         unit = reg_info["unit"]
         sign = reg_info["sign"]
         multiplier = reg_info["multiplier"]
-
         raw_value = struct.pack('>HH', registers[i], registers[i + 1])
-
-        if sign == "Uint":
-            scaled_value = struct.unpack('>H', raw_value[:2])[0] * multiplier
-        elif sign == "int":
-            scaled_value = struct.unpack('>h', raw_value[:2])[0] * multiplier
-        elif sign == "float":
+        if sign == "float":
             scaled_value = struct.unpack('>f', raw_value)[0] * multiplier
         else:
-            raise ValueError(f"Unsupported sign type: {sign}")
-
+            continue  # Simplified for example; extend as needed
         data[current_address] = {
             "description": description,
             "value": scaled_value,
             "unit": unit
         }
-
     return data
-
 
 def format_data_for_database(processed_data):
     """Format the processed data into the database JSON structure."""
-    timestamp = datetime.now().isoformat()  # Get the current timestamp in ISO 8601 format
-    formatted_data = {timestamp: {}}  # Create a dictionary with a timestamped key
-
-    for address, values in processed_data.items():
-        # Ensure address is a string to avoid JSON serialization issues
-        formatted_data[timestamp][str(address)] = values
-
+    timestamp = datetime.now().isoformat()
+    formatted_data = {timestamp: processed_data}
     return formatted_data
+
+def mqtt_publish(client, topic, message):
+    """Publish data to MQTT topic."""
+    client.publish(topic, message)
+    print(f"Data published to MQTT topic {topic}")
 
 
 async def run_async_simple_client(comm, host, port, framer=Framer.SOCKET, address_list=[]):
+    """Run async client and publish data to MQTT."""
+    # MQTT Client setup
+    mqtt_client = mqtt.Client()
+    mqtt_client.connect(MQTT_BROKER, MQTT_PORT, 60)
+    print("Connecting to mqtt server")
+
     """Run async client."""
     # activate debugging
     pymodbus_apply_logging_config("DEBUG")
@@ -250,6 +203,8 @@ async def run_async_simple_client(comm, host, port, framer=Framer.SOCKET, addres
                 all_data.update(processed_data)
                 # Update all_data with the new database_data
             database_data = format_data_for_database(all_data)
+            json_data = json.dumps(database_data)
+            mqtt_publish(mqtt_client, MQTT_TOPIC, json_data)
             # send data to firebase:
             # send_data_to_firebase(database_data)
             # Print all accumulated data
@@ -267,7 +222,7 @@ async def run_async_simple_client(comm, host, port, framer=Framer.SOCKET, addres
     finally:
         print("close connection")
         client.close()
-
+        mqtt_client.disconnect()
 
 if __name__ == "__main__":
     # loop = asyncio.get_event_loop()
