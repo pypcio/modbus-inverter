@@ -27,93 +27,92 @@ from datetime import datetime
 
 # Constants for Register Addresses
 # INPUT DATA
-STATUS_LOW_BYTE = 0x0010
-MESSAGE_1 = 0x0011
-MESSAGE_2 = 0x0012
-MESSAGE_3 = 0x0013
-MESSAGE_4 = 0x0014
-MESSAGE_5 = 0x0015
-GRID_1_INPUT_VOLTAGE = 0x0483
-GRID_1_INPUT_CURRENT = 0x0484
-GRID_2_INPUT_VOLTAGE = 0x0485
-GRID_2_INPUT_CURRENT = 0x0486
-GRID_1_INPUT_POWER = 0x0487
-GRID_2_INPUT_POWER = 0x0488
-# OPUTPUT DATA
-OUTPUT_ACTIVE_POWER = 0x0489
-OUTPUT_REACTIVE_POWER = 0x048A
-GRID_FREQUENCY = 0x048B
-# A_PHASE_VOLTAGE = 0x048C
-A_PHASE_VOLTAGE = 0x048D
-A_PHASE_CURRENT = 0x048E
-B_PHASE_CURRENT = 0x048F
-C_PHASE_VOLTAGE = 0x0490
-C_PHASE_CURRENT = 0x0491
-# INVERTER GENERATOR MESSAGE
-TOTAL_PRODUCTION_HIGH_BYTE = 0x0015
-TOTAL_PRODUCTION_LOW_BYTE = 0x0016
-TOTAL_GENERATION_TIME_HIGH_BYTE = 0x0017
-TOTAL_GENERATION_TIME_LOW_BYTE = 0x0018
-TODAY_PRODUCTION = 0x0019
-TODAY_GENERATION_TIME = 0x001A
-# INVERTER INNER MESSAGE
-INVERTER_MODULE_TEMPERATURE = 0x001B
-INVERTER_INNER_TEMPERATURE = 0x001C
-INVERTER_BUS_VOLTAGE = 0x001D
-PV1_VOLTAGE_SAMPLE = 0x001E
-PV1_CURRENT_SAMPLE = 0x001F
-COUNT_DOWN_TIME = 0x0020
-INVERTER_ALERT_MESSAGE = 0x0021
-INPUT_MODE_LOW_BYTE = 0x0022
-COMMUNICATION_BOARD_INNER_MESSAGE = 0x0023
-INSULATION_PV1_PLUS_GROUND_1 = 0x0024  # Assuming there's a typo and these should be different
-INSULATION_PV1_PLUS_GROUND_2 = 0x0025  # Assuming there's a typo and these should be different
-INSULATION_PV_MINUS_GROUND = 0x0026
-COUNTRY = 0x0027
-
-# STATUS_LOW_BYTE = 0x9C41
-# MESSAGE_1 = 0x9C42
-# MESSAGE_2 = 0x9C43
-# MESSAGE_3 = 0x9C44
-# MESSAGE_4 = 0x9C45
-# MESSAGE_5 = 0x9C46
-# GRID_1_INPUT_VOLTAGE = 0x9C47
-# GRID_1_INPUT_CURRENT = 0x9C48
-# GRID_2_INPUT_VOLTAGE = 0x9C49
-# GRID_2_INPUT_CURRENT = 0x9C4A
-# GRID_1_INPUT_POWER = 0x9C4B
-# GRID_2_INPUT_POWER = 0x9C4C
-# # OUTPUT DATA
-# OUTPUT_ACTIVE_POWER = 0x9C4D
-# OUTPUT_REACTIVE_POWER = 0x9C4E
-# GRID_FREQUENCY = 0x9C4F
-# A_PHASE_VOLTAGE = 0x9C50
-# A_PHASE_CURRENT = 0x9C51
-# B_PHASE_VOLTAGE = 0x9C52
-# B_PHASE_CURRENT = 0x9C53
-# C_PHASE_VOLTAGE = 0x9C54
-# C_PHASE_CURRENT = 0x9C55
+# STATUS_LOW_BYTE = 0x0000
+# MESSAGE_1 = 0x0001
+# MESSAGE_2 = 0x0002
+# MESSAGE_3 = 0x0003
+# MESSAGE_4 = 0x0004
+# MESSAGE_5 = 0x0005
+# GRID_1_INPUT_VOLTAGE = 0x0006
+# GRID_1_INPUT_CURRENT = 0x0007
+# GRID_2_INPUT_VOLTAGE = 0x0008
+# GRID_2_INPUT_CURRENT = 0x0009
+# GRID_1_INPUT_POWER = 0x000A
+# GRID_2_INPUT_POWER = 0x000B
+# # OPUTPUT DATA
+# OUTPUT_ACTIVE_POWER = 0x000C
+# OUTPUT_REACTIVE_POWER = 0x000D
+# GRID_FREQUENCY = 0x000E
+# A_PHASE_VOLTAGE = 0x000F
+# A_PHASE_CURRENT = 0x0010
+# B_PHASE_VOLTAGE = 0x0011
+# B_PHASE_CURRENT = 0x0012
+# C_PHASE_VOLTAGE = 0x0013
+# C_PHASE_CURRENT = 0x0014
 # # INVERTER GENERATOR MESSAGE
-# TOTAL_PRODUCTION_HIGH_BYTE = 0x9C56
-# TOTAL_PRODUCTION_LOW_BYTE = 0x9C57
-# TOTAL_GENERATION_TIME_HIGH_BYTE = 0x9C58
-# TOTAL_GENERATION_TIME_LOW_BYTE = 0x9C59
-# TODAY_PRODUCTION = 0x9C5A
-# TODAY_GENERATION_TIME = 0x9C5B
+# TOTAL_PRODUCTION_HIGH_BYTE = 0x0015
+# TOTAL_PRODUCTION_LOW_BYTE = 0x0016
+# TOTAL_GENERATION_TIME_HIGH_BYTE = 0x0017
+# TOTAL_GENERATION_TIME_LOW_BYTE = 0x0018
+# TODAY_PRODUCTION = 0x0019
+# TODAY_GENERATION_TIME = 0x001A
 # # INVERTER INNER MESSAGE
-# INVERTER_MODULE_TEMPERATURE = 0x9C5C
-# INVERTER_INNER_TEMPERATURE = 0x9C5D
-# INVERTER_BUS_VOLTAGE = 0x9C5E
-# PV1_VOLTAGE_SAMPLE = 0x9C5F
-# PV1_CURRENT_SAMPLE = 0x9C60
-# COUNT_DOWN_TIME = 0x9C61
-# INVERTER_ALERT_MESSAGE = 0x9C62
-# INPUT_MODE_LOW_BYTE = 0x9C63
-# COMMUNICATION_BOARD_INNER_MESSAGE = 0x9C64
-# INSULATION_PV1_PLUS_GROUND_1 = 0x9C65
-# INSULATION_PV1_PLUS_GROUND_2 = 0x9C66
-# INSULATION_PV_MINUS_GROUND = 0x9C67
-# COUNTRY = 0x9C68
+# INVERTER_MODULE_TEMPERATURE = 0x001B
+# INVERTER_INNER_TEMPERATURE = 0x001C
+# INVERTER_BUS_VOLTAGE = 0x001D
+# PV1_VOLTAGE_SAMPLE = 0x001E
+# PV1_CURRENT_SAMPLE = 0x001F
+# COUNT_DOWN_TIME = 0x0020
+# INVERTER_ALERT_MESSAGE = 0x0021
+# INPUT_MODE_LOW_BYTE = 0x0022
+# COMMUNICATION_BOARD_INNER_MESSAGE = 0x0023
+# INSULATION_PV1_PLUS_GROUND_1 = 0x0024  # Assuming there's a typo and these should be different
+# INSULATION_PV1_PLUS_GROUND_2 = 0x0025  # Assuming there's a typo and these should be different
+# INSULATION_PV_MINUS_GROUND = 0x0026
+# COUNTRY = 0x0027
+STATUS_LOW_BYTE = 0x9C41
+MESSAGE_1 = 0x9C42
+MESSAGE_2 = 0x9C43
+MESSAGE_3 = 0x9C44
+MESSAGE_4 = 0x9C45
+MESSAGE_5 = 0x9C46
+GRID_1_INPUT_VOLTAGE = 0x9C47
+GRID_1_INPUT_CURRENT = 0x9C48
+GRID_2_INPUT_VOLTAGE = 0x9C49
+GRID_2_INPUT_CURRENT = 0x9C4A
+GRID_1_INPUT_POWER = 0x9C4B
+GRID_2_INPUT_POWER = 0x9C4C
+# OUTPUT DATA
+OUTPUT_ACTIVE_POWER = 0x9C4D
+OUTPUT_REACTIVE_POWER = 0x9C4E
+GRID_FREQUENCY = 0x9C4F
+A_PHASE_VOLTAGE = 0x9C50
+A_PHASE_CURRENT = 0x9C51
+B_PHASE_VOLTAGE = 0x9C52
+B_PHASE_CURRENT = 0x9C53
+C_PHASE_VOLTAGE = 0x9C54
+C_PHASE_CURRENT = 0x9C55
+# INVERTER GENERATOR MESSAGE
+TOTAL_PRODUCTION_HIGH_BYTE = 0x9C56
+TOTAL_PRODUCTION_LOW_BYTE = 0x9C57
+TOTAL_GENERATION_TIME_HIGH_BYTE = 0x9C58
+TOTAL_GENERATION_TIME_LOW_BYTE = 0x9C59
+TODAY_PRODUCTION = 0x9C5A
+TODAY_GENERATION_TIME = 0x9C5B
+# INVERTER INNER MESSAGE
+INVERTER_MODULE_TEMPERATURE = 0x9C5C
+INVERTER_INNER_TEMPERATURE = 0x9C5D
+INVERTER_BUS_VOLTAGE = 0x9C5E
+PV1_VOLTAGE_SAMPLE = 0x9C5F
+PV1_CURRENT_SAMPLE = 0x9C60
+COUNT_DOWN_TIME = 0x9C61
+INVERTER_ALERT_MESSAGE = 0x9C62
+INPUT_MODE_LOW_BYTE = 0x9C63
+COMMUNICATION_BOARD_INNER_MESSAGE = 0x9C64
+INSULATION_PV1_PLUS_GROUND_1 = 0x9C65
+INSULATION_PV1_PLUS_GROUND_2 = 0x9C66
+INSULATION_PV_MINUS_GROUND = 0x9C67
+COUNTRY = 0x9C68
 
 
 
@@ -235,13 +234,13 @@ REGISTER_MAP = {
         "multiplier": 0.01,
         'bytes': 'None',
     },
-    # B_PHASE_VOLTAGE: {
-    #     "description": "B-phase voltage",
-    #     "unit": "V",
-    #     "sign": "Uint",
-    #     "multiplier": 0.1,
-    #     'bytes': 'None',
-    # },
+    B_PHASE_VOLTAGE: {
+        "description": "B-phase voltage",
+        "unit": "V",
+        "sign": "Uint",
+        "multiplier": 0.1,
+        'bytes': 'None',
+    },
     B_PHASE_CURRENT: {
         "description": "B-phase current",
         "unit": "A",
@@ -583,7 +582,7 @@ byte_messages={
 # Note: Continue to add entries for each byte and bit as per your error message table.
 # List of addresses to read
 # address_list = [0x0000, 0x0039]
-address_list = [0x048D]
+address_list = [0x9C41]
 
 
 def process_registers_into_json_data(start_address, registers):
@@ -608,7 +607,7 @@ def process_registers_into_json_data(start_address, registers):
         # Prepare the raw_value for unpacking based on byte orientation
         raw_value = struct.pack('>H', registers[i])
 
-        if sign in ["UI16", "I16"]:
+        if sign in ["Uint", "int"]:
             fmt = '>B' if byte_orientation in ['low', 'high'] else '>H'
             if byte_orientation == 'low':
                 value = struct.unpack_from(fmt, raw_value, 0)[0]  # Unpack low byte
@@ -617,7 +616,7 @@ def process_registers_into_json_data(start_address, registers):
             else:
                 value = struct.unpack(fmt, raw_value)[0]  # Unpack full 16-bit register
             scaled_value = value * multiplier
-        elif sign == "F16":
+        elif sign == "float":
             # Placeholder for float handling; may require combining registers
             scaled_value = "Float handling needs multi-register context"
         elif sign == 'None':
@@ -746,7 +745,7 @@ async def run_async_simple_client(comm, host, port, framer=Framer.SOCKET, addres
         all_data = {}  # Dictionary to accumulate all readable data
         while True:
             for start_address in address_list:  # List of starting addresses
-                rr = await client.read_holding_registers(start_address, 2, slave=7)
+                rr = await client.read_holding_registers(start_address, 12, slave=7)
                 if rr.isError() or isinstance(rr, ExceptionResponse):
                     print(f"Error or Exception while Reading data at address {start_address}: {rr}")
                     continue
@@ -778,5 +777,5 @@ if __name__ == "__main__":
     # loop = asyncio.get_event_loop()
 
     asyncio.run(
-        run_async_simple_client("tcp", port="501", host='192.168.1.9', address_list=address_list), debug=False
+        run_async_simple_client("tcp", port="502", host='192.168.1.9', address_list=address_list), debug=False
     )  # pragma: no cover

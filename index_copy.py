@@ -272,5 +272,5 @@ async def run_async_simple_client(comm, host, port, framer=Framer.SOCKET, addres
 if __name__ == "__main__":
     # loop = asyncio.get_event_loop()
     asyncio.run(
-        run_async_simple_client("tcp", port="503", host='192.168.1.3', address_list=list), debug=False
+        run_async_simple_client("tcp", port="502", host='192.168.1.3', address_list=list), debug=False
     )  # pragma: no cover
