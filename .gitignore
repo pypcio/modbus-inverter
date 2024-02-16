@@ -1,3 +1,5 @@
 .venv
 config.py
 sofar_solar_modbus_map.py
+__pycache__
+/.idea
