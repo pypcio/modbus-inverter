@@ -247,7 +247,7 @@ async def read_async_client(comm, host, port, framer=Framer.SOCKET,slave=0):
 
 def main():
     # loop = asyncio.get_event_loop()
-    asyncio.run(read_async_client(comm=config["comm"], port=config["port"], host=config["host"], slave=12), debug=False)
+    asyncio.run(read_async_client(comm=config["comm"], port=config["port"], host=config["host"], slave=7), debug=False)
     # pragma: no cover
 
 

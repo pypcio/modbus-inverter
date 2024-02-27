@@ -583,7 +583,7 @@ byte_messages={
 # Note: Continue to add entries for each byte and bit as per your error message table.
 # List of addresses to read
 # address_list = [0x0000, 0x0039]
-address_list = [0x048D]
+address_list = [0x0405]
 
 
 def process_registers_into_json_data(start_address, registers):
@@ -746,7 +746,7 @@ async def run_async_simple_client(comm, host, port, framer=Framer.SOCKET, addres
         all_data = {}  # Dictionary to accumulate all readable data
         while True:
             for start_address in address_list:  # List of starting addresses
-                rr = await client.read_holding_registers(start_address, 2, slave=7)
+                rr = await client.read_holding_registers(start_address, 11, slave=7)
                 if rr.isError() or isinstance(rr, ExceptionResponse):
                     print(f"Error or Exception while Reading data at address {start_address}: {rr}")
                     continue

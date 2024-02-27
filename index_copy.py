@@ -47,10 +47,17 @@ VOLTAGE_L3 = 0x04
 CURRENT_L1 = 0x06
 CURRENT_L2 = 0x08
 CURRENT_L3 = 0x0A
+POWER=0x0B
 FREQUENCY_SUPPLY = 0x46
 
 # Modified Register Map
 REGISTER_MAP = {
+POWER: {
+        "description": "Power",
+        "unit": "kW",
+        "sign": "float",
+        "multiplier": 1
+    },
     VOLTAGE_L1: {
         "description": "Napięcie fazowe L1 (L-N)",
         "unit": "V",
@@ -96,7 +103,7 @@ REGISTER_MAP = {
 }
 
 # list = [0x00, 0x02, 0x04, 0x06, 0x08, 0x0A, 0x46]
-list = [0x00, 0x06, 0x46]
+list = [0x00, 0x06, 0x46,0x0B]
 
 
 # def process_registers(start_address, registers):
@@ -241,7 +248,7 @@ async def run_async_simple_client(comm, host, port, framer=Framer.SOCKET, addres
         all_data = {}  # Dictionary to accumulate all readable data
         while True:
             for start_address in address_list:  # List of starting addresses
-                rr = await client.read_input_registers(start_address, 6, slave=1)
+                rr = await client.read_input_registers(start_address, 2, slave=1)
                 if rr.isError() or isinstance(rr, ExceptionResponse):
                     print(f"Error or Exception while Reading data at address {start_address}: {rr}")
                     continue
@@ -272,5 +279,5 @@ async def run_async_simple_client(comm, host, port, framer=Framer.SOCKET, addres
 if __name__ == "__main__":
     # loop = asyncio.get_event_loop()
     asyncio.run(
-        run_async_simple_client("tcp", port="502", host='192.168.1.3', address_list=list), debug=False
+        run_async_simple_client("tcp", port="503", host='192.168.1.3', address_list=list), debug=False
     )  # pragma: no cover
