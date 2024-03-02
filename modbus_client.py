@@ -14,7 +14,7 @@ from pymodbus import (
 )
 
 
-class AsyncModbusReader:
+class AsyncModbusSlave:
     def __init__(self, config):
         self.port = config.get("port", "502")
         self.host = config.get("host", "localhost")
@@ -151,14 +151,14 @@ def combine_registers_to_u64(registers):
     return (registers[0] << 48) | (registers[1] << 32) | (registers[2] << 16) | registers[3]
 
 
-async def read_and_process_address_masks(self, mask_addresses, mask_length=4, slave_id=0, delay=0.1):
+async def read_and_process_address_masks(self, mask_addresses, mask_length=4, delay=0.1):
     """Read and process address masks to update the list of active addresses."""
     active_addresses = set()
     total_addresses = 64
     for index, mask_start_address in enumerate(mask_addresses[self.last_processed_mask_index:],
                                                start=self.last_processed_mask_index):
 
-        rr = await self.client.read_holding_registers(address=mask_start_address, count=mask_length, slave=slave_id)
+        rr = await self.client.read_holding_registers(address=mask_start_address, count=mask_length, slave=self.slave_id)
         if not rr.isError():
             mask_value = self.combine_registers_to_u64(rr.registers)
             for i in range(total_addresses):
@@ -278,7 +278,7 @@ async def read(self):
     if self.__counter == 0:
         try:
             # checking address status using mask
-            await self.read_and_process_address_masks(register_mask_list, slave_id=self.slave_id)
+            await self.read_and_process_address_masks(register_mask_list)
         except Exception as e:
             print(f"Error processing address masks: {e}")
             await self.handle_error(
@@ -333,7 +333,7 @@ async def write(self, instructions):
 # poza klasa!!@!@!@!@!@
 async def main(config):
     # for slave in config["slaves"]:
-    reader1 = AsyncModbusReader(config)
+    reader1 = AsyncModbusSlave(config)
     await reader1.read()
 
 
